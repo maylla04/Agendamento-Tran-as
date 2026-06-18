@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { SQLiteProvider } from "expo-sqlite";
 import HomeScreen from "./src/screens/HomeScreen";
-import NovoAgendamentoScreen from "./src/screens/NovoAgendamento";
+import NovoAgendamentoScreen from "./src/screens/NovoAgendamentoScreen";
 import { inicializarBanco } from "./src/database/database";
 import DetalhesScreen from "./src/screens/DetalhesScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
