@@ -5,6 +5,8 @@ import { RootStackParamList } from '../../App';
 import { Agendamento } from '../types/agendamento';
 import { useSQLiteContext } from 'expo-sqlite';
 import { listarAgendamentos } from '../repositories/agendamentoRepository';
+import CardAgendamento from '../components/CardAgendamento';
+import BotaoPrimario from '../components/BotaoPrimario';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
@@ -23,20 +25,13 @@ async function carregarAgendamentos() {
   return (
     <View>
       <Text>Agendamento de tranças - Maylla Braids</Text>
-      <TouchableOpacity
-      onPress={() => navigation.navigate('NovoAgendamento')}>
-        
-        <Text>Novo Agendamento</Text>
-      </TouchableOpacity>
+      <BotaoPrimario texto="Novo Agendamento" onPress={() => navigation.navigate('NovoAgendamento')}/>
+      
       <FlatList
     data={agendamentos}
     keyExtractor={(item) => String(item.id)}
     renderItem={({ item }) => (
-        <View>
-            <Text>{item.nome}</Text>
-            <Text>{item.data} às {item.horario}</Text>
-            <Text>{item.tipo_tranca}</Text>
-        </View>
+        <CardAgendamento agendamento={item} />
     )}
 />
     </View>

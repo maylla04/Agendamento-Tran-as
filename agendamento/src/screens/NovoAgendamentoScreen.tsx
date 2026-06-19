@@ -1,10 +1,11 @@
-
+import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import { ScrollView, Text, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useSQLiteContext } from 'expo-sqlite';
 import { inserirAgendamento } from '../repositories/agendamentoRepository';
+import BotaoPrimario from '../components/BotaoPrimario';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'NovoAgendamento'>;
 
@@ -20,6 +21,22 @@ export default function NovoAgendamentoScreen({ navigation }: Props) {
   const [tipoTranca, setTipoTranca] = useState('');
   const [fotoUri, setFotoUri] = useState('');
 
+
+  async function tirarFoto() {
+    const { status: camStatus } = await ImagePicker.requestCameraPermissionsAsync();
+    if (camStatus !== 'granted') {
+    Alert.alert('Permissão negada', 'Precisamos acessar a câmera.');
+    return;
+    }
+    const resultado = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        quality: 0.7,
+    });
+
+    if (!resultado.canceled) {
+        setFotoUri(resultado.assets[0].uri);
+    }
+}
 
   async function salvar() {
     await inserirAgendamento(db, { nome, telefone, data, horario, tipo_tranca: tipoTranca, foto_uri: fotoUri });
@@ -56,18 +73,15 @@ export default function NovoAgendamentoScreen({ navigation }: Props) {
     onChangeText={(text: string) => setTipoTranca(text)}
     />
 
-    <TouchableOpacity onPress={() => {}}>
-    <Text>Tirar Foto</Text>
-    </TouchableOpacity>
+    <BotaoPrimario texto="Tirar Foto do Cabelo" onPress={tirarFoto}/>
 
     {fotoUri !== '' && 
     <Image source={{ uri: fotoUri }} 
           style={{ width: 100, height: 100 }} 
       />}
 
-    <TouchableOpacity onPress={() => {salvar()}}>
-      <Text>Salvar</Text>
-    </TouchableOpacity>
+    
+    <BotaoPrimario texto="Salvar" onPress={salvar}/>
     </ScrollView>
   );
 }
